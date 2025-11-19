@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:campus_card}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:mgq@2024}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc.batch_size: 100
+        order_inserts: true
+        order_updates: true
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    lettuce:
+      pool:
+        max-active: 16
+        max-idle: 8
+        min-idle: 2
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/mysql/patches/2025-10-25-face-dispatch.sql, classpath:db/mysql/patches/2025-10-27-org-data-scope.sql, classpath:db/mysql/patches/2025-10-27-logs.sql, classpath:db/mysql/patches/2025-10-27-system-configs.sql, classpath:db/mysql/patches/2025-11-12-parent-wechat-columns.sql
+      continue-on-error: true
+  task:
+    scheduling:
+      enabled: false
+
+attendance:
+  queue:
+    enabled: false
+
+logging:
+  file:
+    name: admin-api.log
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+security:
+  encrypt:
+    secret: "0123456789abcdef0123456789abcdef"

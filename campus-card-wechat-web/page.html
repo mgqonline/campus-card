@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>首页</title>
+  <!-- 引入WeUI样式 -->
+  <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.3.0/weui.min.css">
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1677ff',
+            secondary: '#36d399',
+            warning: '#fbbd23',
+            danger: '#f87272',
+            gray: {
+              100: '#f5f5f5',
+              200: '#e5e5e5',
+              300: '#d4d4d4',
+              400: '#a3a3a3',
+              500: '#737373',
+              600: '#525252',
+              700: '#404040',
+              800: '#262626',
+              900: '#171717',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .nav-active {
+        @apply text-primary;
+      }
+      .card-shadow {
+        @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+      }
+      .page-transition {
+        @apply transition-opacity duration-300;
+      }
+    }
+  </style>
+  
+  <style>
+    /* 基础样式 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f5f5f5;
+      overflow-x: hidden;
+    }
+    
+    /* 轮播图样式 */
+    .carousel {
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    
+    .carousel-item {
+      min-width: 100%;
+    }
+    
+    /* 底部导航栏样式 */
+    .weui-tabbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      z-index: 50;
+      height: 50px;
+    }
+    
+    .weui-tabbar__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      color: #999;
+      text-decoration: none;
+      font-size: 10px;
+      height: 100%;
+    }
+    
+    .weui-tabbar__item.weui-bar__item_on {
+      color: #1677ff;
+    }
+    
+    .weui-tabbar__icon {
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+    
+    /* 页面容器样式 */
+    .page-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 50px;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .page-container.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    /* 解决内容被底部导航遮挡的问题 */
+    .page-content {
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 首页 -->
+  <div id="home" class="page-container active">
+    <div class="page-content">
+      <!-- 顶部导航栏 -->
+      <div class="bg-primary text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">首页</h1>
+        <div class="flex space-x-4">
+          <a href="#" class="text-white"><i class="fa fa-search text-lg"></i></a>
+          <a href="#" class="text-white"><i class="fa fa-bell text-lg"></i></a>
+        </div>
+      </div>
+      
+      <!-- 轮播图 -->
+      <div class="carousel h-48">
+        <div class="carousel-inner">
+          <div class="carousel-item">
+            <img src="https://picsum.photos/800/400?random=1" alt="轮播图1" class="w-full h-full object-cover">
+          </div>
+          <div class="carousel-item">
+            <img src="https://picsum.photos/800/400?random=2" alt="轮播图2" class="w-full h-full object-cover">
+          </div>
+          <div class="carousel-item">
+            <img src="https://picsum.photos/800/400?random=3" alt="轮播图3" class="w-full h-full object-cover">
+          </div>
+        </div>
+        <!-- 轮播指示器 -->
+        <div class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-white/70 carousel-indicator active"></span>
+          <span class="w-2 h-2 rounded-full bg-white/40 carousel-indicator"></span>
+          <span class="w-2 h-2 rounded-full bg-white/40 carousel-indicator"></span>
+        </div>
+      </div>
+      
+      <!-- 功能菜单 -->
+      <div class="bg-white p-4 mt-2">
+        <div class="grid grid-cols-4 gap-2">
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-1">
+              <i class="fa fa-credit-card text-xl"></i>
+            </div>
+            <span class="text-xs">快捷支付</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-1">
+              <i class="fa fa-calendar-check-o text-xl"></i>
+            </div>
+            <span class="text-xs">我的考勤</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning mb-1">
+              <i class="fa fa-line-chart text-xl"></i>
+            </div>
+            <span class="text-xs">消费统计</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center text-danger mb-1">
+              <i class="fa fa-ticket text-xl"></i>
+            </div>
+            <span class="text-xs">优惠券</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mb-1">
+              <i class="fa fa-shopping-cart text-xl"></i>
+            </div>
+            <span class="text-xs">商城</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-1">
+              <i class="fa fa-map-marker text-xl"></i>
+            </div>
+            <span class="text-xs">位置服务</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 mb-1">
+              <i class="fa fa-users text-xl"></i>
+            </div>
+            <span class="text-xs">团队</span>
+          </a>
+          <a href="#" class="flex flex-col items-center p-2">
+            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 mb-1">
+              <i class="fa fa-ellipsis-h text-xl"></i>
+            </div>
+            <span class="text-xs">更多</span>
+          </a>
+        </div>
+      </div>
+      
+      <!-- 消费统计卡片 -->
+      <div class="bg-white p-4 mt-2 rounded-lg mx-3 shadow-sm">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-semibold">本月消费统计</h3>
+          <a href="#consumption" class="text-primary text-sm">查看详情</a>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">餐饮</p>
+            <p class="text-lg font-bold text-danger mt-1">¥850</p>
+          </div>
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">交通</p>
+            <p class="text-lg font-bold text-primary mt-1">¥320</p>
+          </div>
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">其他</p>
+            <p class="text-lg font-bold text-secondary mt-1">¥480</p>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-gray-100">
+          <div class="flex justify-between">
+            <span class="text-gray-500">总计</span>
+            <span class="font-bold text-lg">¥1,650</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 通知公告 -->
+      <div class="bg-white p-4 mt-2">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-semibold">通知公告</h3>
+          <a href="#" class="text-primary text-sm">全部</a>
+        </div>
+        <div class="space-y-3">
+          <a href="#" class="flex items-start p-2 rounded-lg hover:bg-gray-50">
+            <div class="bg-primary/10 text-primary p-2 rounded-full mr-3 mt-1">
+              <i class="fa fa-bullhorn"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium">考勤系统升级通知</h4>
+              <p class="text-gray-500 text-sm mt-1 line-clamp-2">本周六将进行考勤系统升级，期间可能无法正常打卡，升级完成后将另行通知。</p>
+              <p class="text-gray-400 text-xs mt-1">2小时前</p>
+            </div>
+          </a>
+          <a href="#" class="flex items-start p-2 rounded-lg hover:bg-gray-50">
+            <div class="bg-warning/10 text-warning p-2 rounded-full mr-3 mt-1">
+              <i class="fa fa-gift"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium">会员日消费优惠活动</h4>
+              <p class="text-gray-500 text-sm mt-1 line-clamp-2">每月15日为会员日，当天消费可享8折优惠，更有机会获得双倍积分。</p>
+              <p class="text-gray-400 text-xs mt-1">昨天</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 消费页面 -->
+  <div id="consumption" class="page-container">
+    <div class="page-content">
+      <div class="bg-primary text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">消费记录</h1>
+        <div class="flex space-x-4">
+          <a href="#" class="text-white"><i class="fa fa-filter text-lg"></i></a>
+          <a href="#" class="text-white"><i class="fa fa-search text-lg"></i></a>
+        </div>
+      </div>
+      
+      <!-- 消费概览 -->
+      <div class="bg-white p-4 mt-2">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-semibold">本月消费</h3>
+          <select class="text-primary border-none bg-transparent outline-none">
+            <option>本月</option>
+            <option>上月</option>
+            <option>近3个月</option>
+          </select>
+        </div>
+        <div class="text-center mb-4">
+          <p class="text-3xl font-bold">¥1,650</p>
+          <p class="text-gray-500 text-sm mt-1">较上月 <span class="text-danger">+12.5%</span></p>
+        </div>
+        
+        <!-- 消费分类 -->
+        <div class="grid grid-cols-3 gap-2">
+          <div class="text-center p-2">
+            <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger mx-auto mb-1">
+              <i class="fa fa-cutlery"></i>
+            </div>
+            <p class="text-xs text-gray-500">餐饮</p>
+            <p class="text-sm font-medium">51.5%</p>
+          </div>
+          <div class="text-center p-2">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-1">
+              <i class="fa fa-bus"></i>
+            </div>
+            <p class="text-xs text-gray-500">交通</p>
+            <p class="text-sm font-medium">19.4%</p>
+          </div>
+          <div class="text-center p-2">
+            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mx-auto mb-1">
+              <i class="fa fa-shopping-bag"></i>
+            </div>
+            <p class="text-xs text-gray-500">其他</p>
+            <p class="text-sm font-medium">29.1%</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 消费图表 -->
+      <div class="bg-white p-4 mt-2">
+        <h3 class="font-semibold mb-4">消费趋势</h3>
+        <div class="h-48 bg-gray-50 rounded-lg flex items-end justify-around p-2">
+          <div class="flex flex-col items-center">
+            <div class="w-6 bg-primary rounded-t" style="height: 60%"></div>
+            <span class="text-xs mt-1">1日</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-6 bg-primary rounded-t" style="height: 40%"></div>
+            <span class="text-xs mt-1">8日</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-6 bg-primary rounded-t" style="height: 75%"></div>
+            <span class="text-xs mt-1">15日</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-6 bg-primary rounded-t" style="height: 50%"></div>
+            <span class="text-xs mt-1">22日</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-6 bg-primary rounded-t" style="height: 90%"></div>
+            <span class="text-xs mt-1">今日</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 消费记录列表 -->
+      <div class="bg-white p-4 mt-2">
+        <h3 class="font-semibold mb-3">最近消费</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-2 border-b border-gray-100">
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger mr-3">
+                <i class="fa fa-cutlery"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">麦当劳</h4>
+                <p class="text-gray-500 text-xs">今天 12:30</p>
+              </div>
+            </div>
+            <p class="font-medium text-danger">-35.50</p>
+          </div>
+          <div class="flex justify-between items-center p-2 border-b border-gray-100">
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                <i class="fa fa-bus"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">地铁出行</h4>
+                <p class="text-gray-500 text-xs">今天 08:15</p>
+              </div>
+            </div>
+            <p class="font-medium text-danger">-4.00</p>
+          </div>
+          <div class="flex justify-between items-center p-2 border-b border-gray-100">
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mr-3">
+                <i class="fa fa-shopping-bag"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">便利店</h4>
+                <p class="text-gray-500 text-xs">昨天 18:45</p>
+              </div>
+            </div>
+            <p class="font-medium text-danger">-12.80</p>
+          </div>
+          <div class="flex justify-between items-center p-2">
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger mr-3">
+                <i class="fa fa-cutlery"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">中餐厅</h4>
+                <p class="text-gray-500 text-xs">昨天 12:10</p>
+              </div>
+            </div>
+            <p class="font-medium text-danger">-88.00</p>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="#" class="text-primary text-sm">加载更多</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 考勤页面 -->
+  <div id="attendance" class="page-container">
+    <div class="page-content">
+      <div class="bg-primary text-white p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">考勤管理</h1>
+        <div class="flex space-x-4">
+          <a href="#" class="text-white"><i class="fa fa-calendar text-lg"></i></a>
+          <a href="#" class="text-white"><i class="fa fa-question-circle text-lg"></i></a>
+        </div>
+      </div>
+      
+      <!-- 今日打卡 -->
+      <div class="bg-white p-4 mt-2 rounded-lg mx-3 shadow-sm">
+        <h3 class="font-semibold mb-3">今日打卡</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-gray-50 p-4 rounded-lg text-center">
+            <p class="text-gray-500 text-sm">上班打卡</p>
+            <p class="text-2xl font-bold mt-2 mb-3">未打卡</p>
+            <button class="bg-primary text-white py-2 px-4 rounded-full text-sm w-full">
+              立即打卡
+            </button>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg text-center">
+            <p class="text-gray-500 text-sm">下班打卡</p>
+            <p class="text-2xl font-bold mt-2 mb-3">未到时间</p>
+            <button class="bg-gray-200 text-gray-500 py-2 px-4 rounded-full text-sm w-full cursor-not-allowed">
+              18:00后可打卡
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 本月考勤统计 -->
+      <div class="bg-white p-4 mt-2">
+        <h3 class="font-semibold mb-3">本月考勤统计</h3>
+        <div class="grid grid-cols-4 gap-2 text-center">
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">应出勤</p>
+            <p class="text-lg font-bold mt-1">22天</p>
+          </div>
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">已出勤</p>
+            <p class="text-lg font-bold text-primary mt-1">10天</p>
+          </div>
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">迟到</p>
+            <p class="text-lg font-bold text-warning mt-1">1次</p>
+          </div>
+          <div class="p-2">
+            <p class="text-gray-500 text-sm">早退</p>
+            <p class="text-lg font-bold mt-1">0次</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 考勤记录 -->
+      <div class="bg-white p-4 mt-2">
+        <h3 class="font-semibold mb-3">考勤记录</h3>
+        <div class="space-y-3">
+          <div class="border-l-4 border-primary pl-3 py-1">
+            <div class="flex justify-between">
+              <h4 class="font-medium">10月26日</h4>
+              <span class="text-green-500 text-sm">正常</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>上班: 08:30</span>
+              <span>下班: 18:15</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-warning pl-3 py-1">
+            <div class="flex justify-between">
+              <h4 class="font-medium">10月25日</h4>
+              <span class="text-warning text-sm">迟到</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>上班: 09:10</span>
+              <span>下班: 18:05</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-primary pl-3 py-1">
+            <div class="flex justify-between">
+              <h4 class="font-medium">10月24日</h4>
+              <span class="text-green-500 text-sm">正常</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>上班: 08:25</span>
+              <span>下班: 18:30</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-gray-300 pl-3 py-1">
+            <div class="flex justify-between">
+              <h4 class="font-medium">10月23日</h4>
+              <span class="text-gray-500 text-sm">休息</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>-</span>
+              <span>-</span>
+            </div>
+          </div>
+          <div class="border-l-4 border-gray-300 pl-3 py-1">
+            <div class="flex justify-between">
+              <h4 class="font-medium">10月22日</h4>
+              <span class="text-gray-500 text-sm">休息</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>-</span>
+              <span>-</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="#" class="text-primary text-sm">查看更多记录</a>
+        </div>
+      </div>
+      
+      <!-- 请假申请 -->
+      <div class="p-4">
+        <button class="bg-primary text-white py-3 rounded-lg w-full flex items-center justify-center">
+          <i class="fa fa-calendar-plus-o mr-2"></i>
+          请假申请
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 我的页面 -->
+  <div id="profile" class="page-container">
+    <div class="page-content">
+      <!-- 个人信息头部 -->
+      <div class="bg-primary p-6 text-white">
+        <div class="flex items-center">
+          <img src="https://picsum.photos/100/100?random=10" alt="头像" class="w-16 h-16 rounded-full border-2 border-white object-cover">
+          <div class="ml-4">
+            <h2 class="text-xl font-bold">张三</h2>
+            <p class="text-white/80 text-sm mt-1">ID: 1008611</p>
+          </div>
+          <div class="ml-auto">
+            <i class="fa fa-angle-right text-xl"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 个人数据 -->
+      <div class="bg-white p-4 mt-2">
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div>
+            <p class="text-2xl font-bold text-primary">500</p>
+            <p class="text-gray-500 text-sm mt-1">积分</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-warning">3</p>
+            <p class="text-gray-500 text-sm mt-1">优惠券</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-secondary">98%</p>
+            <p class="text-gray-500 text-sm mt-1">出勤率</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 功能菜单 -->
+      <div class="bg-white p-2 mt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <a href="#" class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">个人资料</p>
+              <p class="text-gray-500 text-xs mt-0.5">编辑个人信息</p>
+            </div>
+            <i class="fa fa-angle-right text-gray-400"></i>
+          </a>
+          <a href="#" class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mr-3">
+              <i class="fa fa-credit-card"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">银行卡管理</p>
+              <p class="text-gray-500 text-xs mt-0.5">绑定/解绑银行卡</p>
+            </div>
+            <i class="fa fa-angle-right text-gray-400"></i>
+          </a>
+          <a href="#" class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning mr-3">
+              <i class="fa fa-cog"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">设置</p>
+              <p class="text-gray-500 text-xs mt-0.5">账户相关设置</p>
+            </div>
+            <i class="fa fa-angle-right text-gray-400"></i>
+          </a>
+          <a href="#" class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger mr-3">
+              <i class="fa fa-question-circle"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">帮助中心</p>
+              <p class="text-gray-500 text-xs mt-0.5">常见问题解答</p>
+            </div>
+            <i class="fa fa-angle-right text-gray-400"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- 系统信息 -->
+      <div class="bg-white p-4 mt-2">
+        <h3 class="font-semibold mb-3">关于我们</h3>
+        <div class="flex justify-between items-center p-2 border-b border-gray-100">
+          <span>版本信息</span>
+          <span class="text-gray-500">v2.3.0</span>
+        </div>
+        <div class="flex justify-between items-center p-2 border-b border-gray-100">
+          <span>检查更新</span>
+          <span class="text-primary">已是最新版本</span>
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <span>联系客服</span>
+          <i class="fa fa-angle-right text-gray-400"></i>
+        </div>
+      </div>
+      
+      <!-- 退出登录 -->
+      <div class="p-4 mt-4">
+        <button class="border border-danger text-danger py-3 rounded-lg w-full">
+          退出登录
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 底部导航栏 -->
+  <footer class="weui-tabbar">
+    <a href="#home" class="weui-tabbar__item weui-bar__item_on" data-page="home">
+      <i class="fa fa-home weui-tabbar__icon"></i>
+      <span class="weui-tabbar__label">首页</span>
+    </a>
+    <a href="#consumption" class="weui-tabbar__item" data-page="consumption">
+      <i class="fa fa-credit-card weui-tabbar__icon"></i>
+      <span class="weui-tabbar__label">消费</span>
+    </a>
+    <a href="#attendance" class="weui-tabbar__item" data-page="attendance">
+      <i class="fa fa-calendar-check-o weui-tabbar__icon"></i>
+      <span class="weui-tabbar__label">考勤</span>
+    </a>
+    <a href="#profile" class="weui-tabbar__item" data-page="profile">
+      <i class="fa fa-user weui-tabbar__icon"></i>
+      <span class="weui-tabbar__label">我</span>
+    </a>
+  </footer>
+  
+  <script>
+    // 页面切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取所有导航项和页面
+      const navItems = document.querySelectorAll('.weui-tabbar__item');
+      const pages = document.querySelectorAll('.page-container');
+      
+      // 为每个导航项添加点击事件
+      navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // 获取目标页面ID
+          const targetPage = this.getAttribute('data-page');
+          
+          // 移除所有导航项的活跃状态
+          navItems.forEach(nav => nav.classList.remove('weui-bar__item_on'));
+          
+          // 为当前点击的导航项添加活跃状态
+          this.classList.add('weui-bar__item_on');
+          
+          // 隐藏所有页面
+          pages.forEach(page => page.classList.remove('active'));
+          
+          // 显示目标页面
+          document.getElementById(targetPage).classList.add('active');
+        });
+      });
+      
+      // 轮播图功能
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.carousel-item');
+      const indicators = document.querySelectorAll('.carousel-indicator');
+      const totalSlides = slides.length;
+      
+      function showSlide(index) {
+        // 确保索引在有效范围内
+        if (index < 0) index = totalSlides - 1;
+        if (index >= totalSlides) index = 0;
+        
+        // 移动轮播容器
+        document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
+        
+        // 更新指示器状态
+        indicators.forEach((indicator, i) => {
+          if (i === index) {
+            indicator.classList.add('bg-white/70');
+            indicator.classList.remove('bg-white/40');
+          } else {
+            indicator.classList.add('bg-white/40');
+            indicator.classList.remove('bg-white/70');
+          }
+        });
+        
+        currentSlide = index;
+      }
+      
+      // 自动轮播
+      setInterval(() => {
+        showSlide(currentSlide + 1);
+      }, 3000);
+      
+      // 点击指示器切换轮播
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          showSlide(index);
+        });
+      });
+      
+      // 支持通过锚点直接访问页面
+      const hash = window.location.hash.substring(1);
+      if (hash && document.getElementById(hash)) {
+        navItems.forEach(nav => {
+          if (nav.getAttribute('data-page') === hash) {
+            nav.click();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

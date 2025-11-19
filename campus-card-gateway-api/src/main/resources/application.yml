@@ -1,0 +1,36 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: campus-card-gateway-api
+
+# Springdoc Swagger UI settings
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+gateway:
+  auth:
+    enabled: true
+    secret: change-me-secret-please-change-32-bytes-minimum!
+    issuer: campus-card-gw
+    expireMinutes: 60
+    refreshExpireMinutes: 10080
+    swagger-enabled: true
+    doc-allow-local-only: true
+    doc-access-secret: doc-secret
+    cors-allowed-origins:
+      - http://localhost:3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

@@ -1,0 +1,8 @@
+项目子模块工程构建开发划分如下：
+- campus-card-admin-web      # Web后台管理前端
+- campus-card-wechat-web     # 微信端前端
+- campus-card-admin-api      # Web后台API
+- campus-card-wechat-api     # 微信端API
+- campus-card-common         # 公共模块（可选）
+```
+**优点：** 简洁明了，符合国际惯例，易于理解

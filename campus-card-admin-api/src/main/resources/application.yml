@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: mysql
+  jackson:
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+security:
+  encrypt:
+    secret: "0123456789abcdef0123456789abcdef" # 32字节AES秘钥
